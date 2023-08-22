@@ -1,8 +1,8 @@
 import config
+import config
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-import config
 import asyncio
 import requests
 
@@ -35,8 +35,8 @@ async def chat_message_handler(event, session):
                                                 event.object.message['from_id'], \
                                                 event.object.message['peer_id']
 
-        received_message = event.object.message['text']
-        match received_message.lower(): # TODO make get using api receiving day time information
+        received_message = event.object.message['text'].lower().split(' ')
+        match received_message[0]: # TODO make get using api receiving day time information
             case '/help':
                 message = """
                 Приветвую вас, рабы беззакония, разбоя, и прочих нехороших вещей
@@ -76,13 +76,42 @@ async def chat_message_handler(event, session):
                                                  'group_id'     : group_id,
                                                  'message'      : message})
             case '/init_mafia':
-                ...
+                print(len(received_message))
+                print(received_message)
+                if len(received_message) > 1:
+                    try:
+                        quantity = int(received_message[1])
+                    except ValueError:
+                        reseived_message = event.object.message
+                        exceptionMessage = """
+                        Некорректный формат введенных данных,
+                        образец 
+                        /init_mafia 100"""
+                        session.method('messages.send', {'random_id'    : random_id,
+                                                         'peer_id'      : peer_id,
+                                                         'group_id'     : group_id,
+                                                         'message'      : exceptionMessage,
+                                                         'reply_message': received_message})
+                else:
+                    message = f'your room id is >>> '
+                    session.method('messages.send', {'random_id'    : random_id,
+                                                     'peer_id'      : peer_id,
+                                                     'group_id'     : group_id,
+                                                     'message'      : message,})
+                    message = f'{peer_id}'
+                    session.method('messages.send', {'random_id'    : random_id,
+                                                     'peer_id'      : peer_id,
+                                                     'group_id'     : group_id,
+                                                     'message'      : message,})
             case '/start_mafia':
                 ...
             case '/abort':
                 ...
             case '/bot':    # create buttons
                 ...
+            case '/join':
+                ...
+                # {id_person : [role : int, condition : bool, action : int]}
     except KeyError:
         # receive chat id and print to chat rules
         ...
@@ -90,13 +119,12 @@ async def chat_message_handler(event, session):
         ...
 
 async def main():
-
     token = config.token
     group_id = config.group_id
-
     vk_session = vk_api.VkApi(token=token)
     receiver = vk_api.bot_longpoll.VkBotLongPoll(vk_session, group_id) # TODO : write greetings
     for event in receiver.listen():
+        print(event)
         if event.type == VkBotEventType.MESSAGE_NEW:
             if event.from_user:
                 await personal_message_handler(event)
