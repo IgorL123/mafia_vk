@@ -1,8 +1,5 @@
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
-import requests
-from vk_api.keyboard import VkKeyboard
-
 import config
 import asyncio
 
@@ -35,14 +32,7 @@ def send_commissar_info_message():
         keyboard_com.add_button("игрок такой-то")
     vk_api.messages.send(message_text="", receiver_user_id="", random_id="", keyboard_com="")
 
-
 async def personal_message_handler(event):
-    vk_session=vk_api.VkApi(token=tocken)
-    if "наступила ночь в игре" :
-    if ... :
-        vk_api.messages.send(message_text="мафия", receiver_user_id="", random_id="")
-    else :
-        vk_api.messages.send(message_text="мирный", receiver_user_id="", random_id="")
     pass
 
 
