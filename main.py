@@ -22,6 +22,7 @@ import asyncio
         }
     }
 }
+
 session_data = dict()
 
 def get_tci(tui: str) -> str:
@@ -33,8 +34,6 @@ def send_commissar_info_message():
     for i, "здесь будет массив имен живых игроков" in "сам список живых игроков":
         keyboard_com.add_button("игрок такой-то")
     vk_api.messages.send(message_text="", receiver_user_id="", random_id="", keyboard_com="")
-
-
 
 
 async def personal_message_handler(event):
